@@ -12,9 +12,9 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route index element={<Home />} />
-              <Route path='/home' element={<Home />} />
+              <Route path='/' element={<Home />} />
               {/* <Route path='/contact' element={<Contact />} />
-          <Route path='/cart' element={<Cart />} />
+          <Route path='/cart' element={<Cart />} /> 
           <Route path='/login' element={<Login />} /> */}
               <Route path='/list' element={<List />} />
               {/* <Route path='/product' element={<Product />} /> */}
