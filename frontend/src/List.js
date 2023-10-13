@@ -1,20 +1,22 @@
-import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
+import React, { useEffect, useState } from "react";
 import Left from './list/Left.js';
 import Right from './list/Right.js';
-export class List extends Component {
-  // static propTypes = {
+import { useLocation } from 'react-router-dom';
 
-  // }
-
-  render() {
-    return (
-      <div>
-        <Left />
-        <Right />
-      </div>
-    )
-  }
+function List() {
+  const {state} = useLocation();
+  const  params  = state;
+  const [sortBy,setSortBy]=useState('none');
+  const [filter,setFilter]=useState('none');
+  useEffect(()=>{
+    console.log(sortBy,filter);
+  },[sortBy,filter]);
+  return (  
+    <div>
+      <Left setFilter={setFilter} setSortBy={setSortBy}/>
+      <Right type={params.type} filter={filter} sortBy={sortBy}/>
+    </div>
+  )
 }
 
 export default List
