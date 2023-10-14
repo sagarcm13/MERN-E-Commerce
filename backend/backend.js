@@ -20,6 +20,12 @@ app.get('/list', async(req, res) => {
     console.log(result);
     res.send(result);
 });
+app.get('/product', async(req, res) => {
+    console.log(req.query);
+    const result= await db.collection('products').find({_id:req.query.id}).toArray();
+    console.log(result);
+    res.send(result);
+});
 
 // server listening on port
 app.listen(port,async () => {

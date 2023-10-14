@@ -6,9 +6,6 @@ export default function Right(props) {
   const { data, isFetched } = useProducts(props.type)
   const [u, setU] = useState([]);
   useEffect(() => {
-    console.log('useEffect is running');
-    console.log('Filter:', props.filter);
-    console.log('Sort By:', props.sortBy);
     let productData = data || [];
     productData = applingFilter(productData, props.filter, props.sortBy);
     const x = []
@@ -30,7 +27,7 @@ export default function Right(props) {
       }
     }
     setU(x)
-  }, [isFetched, props.filter, props.sortBy])
+  }, [data, props.filter, props.sortBy])
   if (!isFetched) {
     return <div>Loading...</div>;
   }
@@ -45,8 +42,6 @@ export default function Right(props) {
   )
 };
 const applingFilter = (data, filter, sortBy) => {
-  console.log('appling');
-  console.log(filter);
   if (filter === 'none' && sortBy === 'none') {
     return data;
   } else if (filter === 'none' && sortBy === 'htl') {

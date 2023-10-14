@@ -9,7 +9,6 @@ function List() {
   const [sortBy,setSortBy]=useState('none');
   const [filter,setFilter]=useState('none');
   useEffect(()=>{
-    console.log(sortBy,filter);
   },[sortBy,filter]);
   return (  
     <div>
