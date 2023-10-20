@@ -1,6 +1,7 @@
 import Nav from './Nav.js'
 import Home from './Home.js'
 import List from './List.js'
+import Cart from './Cart.js'
 import Product from './Product.js'
 import Footer from './Footer.js'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
@@ -21,8 +22,8 @@ function App() {
               <Route index element={<Home />} />
               <Route path='/' element={<Home />} />
               {/* <Route path='/contact' element={<Contact />} />
-          <Route path='/cart' element={<Cart />} /> 
           <Route path='/login' element={<Login />} /> */}
+          <Route path='/cart' element={<Cart />} /> 
               <Route path='/list' element={<List />} />
               <Route path='/product' element={<Product />} />
             </Routes>

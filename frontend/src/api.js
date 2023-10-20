@@ -12,6 +12,7 @@ export function useProducts(type) {
       queryFn: getProducts,
     });
   }
+
 export const getProductDetail = async (context) =>  {
     const id = context.queryKey[1]
     return axiosClient.get('/product', { params: {id: id}}).then(res => res.data)
@@ -21,5 +22,16 @@ export function useProductDetail(id) {
     return useQuery({
       queryKey: ["productDetail", id],
       queryFn: getProductDetail,
+    });
+  }
+
+export const getCartDetail = async (context) =>  {
+    return axiosClient.get('/cart').then(res => res.data)
+}
+
+export function useCartDetail() {
+    return useQuery({
+      // queryKey: ["productDetail", id],
+      queryFn: getCartDetail,
     });
   }

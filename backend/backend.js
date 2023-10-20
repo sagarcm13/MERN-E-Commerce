@@ -26,6 +26,11 @@ app.get('/product', async(req, res) => {
     console.log(result);
     res.send(result);
 });
+app.get('/cart', async(req, res) => {
+    const result= await db.collection('products').find({type:'laptop'}).project({'name':1,'price':1,'Images.i1':1}).toArray();
+    console.log(result);
+    res.send(result);
+});
 
 // server listening on port
 app.listen(port,async () => {
