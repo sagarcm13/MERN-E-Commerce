@@ -4,7 +4,7 @@ require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.uaophte.mongodb.net/`;
 const client = new MongoClient(uri);
-const db=client.db('Web-application');
+const db = client.db('Web-application');
 const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -15,41 +15,48 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.send("Backend server is running at port 8000");
 });
-app.get('/list', async(req, res) => {
+app.get('/list', async (req, res) => {
     console.log(req.query);
-    const result= await db.collection('products').find({type:req.query.type}).project({'name':1,'price':1,'Images.i1':1}).toArray();
+    const result = await db.collection('products').find({ type: req.query.type }).project({ 'name': 1, 'price': 1, 'Images.i1': 1 }).toArray();
     console.log(result);
     res.send(result);
 });
-app.get('/product', async(req, res) => {
+app.get('/product', async (req, res) => {
     console.log(req.query);
-    const result= await db.collection('products').find({_id:req.query.id}).toArray();
+    const result = await db.collection('products').find({ _id: req.query.id }).toArray();
     console.log(result);
     res.send(result);
 });
-app.get('/cart', async(req, res) => {
-    const result= await db.collection('products').find({type:'laptop'}).project({'name':1,'price':1,'Images.i1':1}).toArray();
+app.get('/cart', async (req, res) => {
+    const result = await db.collection('products').find({ type: 'laptop' }).project({ 'name': 1, 'price': 1, 'Images.i1': 1 }).toArray();
     console.log(result);
     res.send(result);
 });
-app.post('/login',(req, res) => {
+app.post('/login',async (req, res) => {
     console.log(req.body);
-    res.send(req.body);
+    try {
+        const result = await db.collection('login').insertOne(req.body);
+        console.log(result);
+        res.send("1234");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }    
 });
-app.post('/sign_up',(req, res) => {
+app.post('/sign_up', (req, res) => {
     console.log(req.body);
     res.send(req.body);
 });
 
 // server listening on port
-app.listen(port,async () => {
+app.listen(port, async () => {
     console.log(`successfully started server on port ${port}`);
     try {
         await client.connect();
         console.log('Connected to MongoDB Atlas');
-        const res=await db.collection('login').find().toArray();
+        const res = await db.collection('login').find().toArray();
         console.log(res);
-      } catch (error) {
+    } catch (error) {
         console.error('Error connecting to MongoDB:', error);
-      }
+    }
 });
