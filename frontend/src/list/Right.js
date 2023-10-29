@@ -69,13 +69,13 @@ const applingFilter = (data, filter, sortBy) => {
     return data.filter((item)=>{return (item.price>=20000 && item.price<45000)}).sort((a, b) => {return a.price - b.price;});
   }
   else if (filter === 'a45' && sortBy === 'none') {
-    return data.filter((item)=>{return item.price>45000});
+    return data.filter((item)=>{return item.price>=45000});
   }
   else if (filter === 'a45' && sortBy === 'htl') {
-    return data.filter((item)=>{return item.price>45000}).sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    return data.filter((item)=>{return item.price>=45000}).sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
   }
   else if (filter === 'a45' && sortBy === 'lth') {
-    return data.filter((item)=>{return item.price>45000}).sort((a, b) => {return a.price - b.price;});
+    return data.filter((item)=>{return item.price>=45000}).sort((a, b) => {return a.price - b.price;});
   }
   else return data;
 }

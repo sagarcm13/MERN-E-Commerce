@@ -9,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 const port = 8000;
+app.use(express.json());
 
 // endpoints 
 app.get('/', (req, res) => {
@@ -30,6 +31,14 @@ app.get('/cart', async(req, res) => {
     const result= await db.collection('products').find({type:'laptop'}).project({'name':1,'price':1,'Images.i1':1}).toArray();
     console.log(result);
     res.send(result);
+});
+app.post('/login',(req, res) => {
+    console.log(req.body);
+    res.send(req.body);
+});
+app.post('/sign_up',(req, res) => {
+    console.log(req.body);
+    res.send(req.body);
 });
 
 // server listening on port
