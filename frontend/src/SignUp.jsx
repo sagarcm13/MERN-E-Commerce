@@ -28,7 +28,11 @@ export default function SignUp() {
 }
   const submitData = async (event) => {
     event.preventDefault();
-    mutation.mutate({ userName, email, password, cpassword });
+    if (password!==cpassword) {
+      alert("password and confirm password mismatch")
+      return
+    }
+    mutation.mutate({ userName, email, password });
     setEmail('');
     setUserName('');
     setPassword('');
