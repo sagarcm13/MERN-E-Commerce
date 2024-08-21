@@ -11,6 +11,9 @@ export default function Product() {
   useEffect(() => {
     setProductData(data);
   }, [data]);
+  if (!isFetched) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <ProductLeft data={productData} />
