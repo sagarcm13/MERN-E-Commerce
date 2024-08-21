@@ -10,7 +10,7 @@ export default function Cart() {
     let datalist = data || [];
     datalist = datalist.map(obj => { return { ...obj, value: 1 } });
     setCartData(datalist);
-  }, [isFetched]);
+  }, [data,isFetched]);
   useEffect(() => {
     let price = cartData.reduce((price, item) => { return price + item.price * item.value }, 0);
     setTotalPrice(price);
@@ -19,7 +19,7 @@ export default function Cart() {
         <li className='text-white m-5 ' key={obj._id}>
           <div className="box m-5 p-5 flex border-2">
             <div className="img"><img src={obj.Images.i1} width={200} height={200} alt="" /></div>
-            <div className="rigth ml-10 space-y-5">
+            <div className="right ml-10 space-y-5">
               <div className="text-2xl text-white ">{obj.name}</div>
               <div className="text-2xl text-white ">₹{obj.price}</div>
               <div className="btn flex">
