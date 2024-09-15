@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 const port = 8000;
 app.use(express.json());
-const secretKey=process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET
 // endpoints 
 app.get('/', (req, res) => {
     res.send("Backend server is running at port 8000");
@@ -20,61 +20,46 @@ app.get('/', (req, res) => {
 const verifyToken = (req, res, next) => {
     const token = req.header('x-auth-token');
     if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
-    }
-    try {
-        const decoded = jwt.verify(token, secretKey);
-        req.email = decoded.email;
-        console.log(req.email);
-        next();
-    } catch (err) {
-        res.status(401).json({ msg: 'Token is not valid' });
+        return res.status(401).json({ message: 'No token, authorization denied' });
+    } else {
+        try {
+            const decoded = jwt.verify(token, secretKey);
+            req.email = decoded.email;
+            next();
+        } catch (err) {
+            res.status(401).json({ message: 'Token is not valid' });
+        }
     }
 };
 app.get('/list', async (req, res) => {
-    console.log(req.query);
-    const result = await db.collection('products').find({ type: req.query.type }).project({ 'name': 1, 'price': 1, 'Images.i1': 1 }).toArray();
-    console.log(result);
-    res.send(result);
-});
-app.get('/product', async (req, res) => {
-    console.log(req.query);
-    const result = await db.collection('products').find({ _id: req.query.id }).toArray();
-    console.log(result);
-    res.send(result);
-});
-
-app.get('/cart',verifyToken, async (req, res) => {
-    console.log("verified");
-    const result = await db.collection('products').find({ type: 'laptop' }).project({ 'name': 1, 'price': 1, 'Images.i1': 1 }).toArray();
-    res.send(result);
-});
-app.post('/sign_up', async (req, res) => {
-    req.body.password = await bcrypt.hash(req.body.password, 10);
     try {
-        const result = await db.collection('login').insertOne(req.body);
-        console.log(result);
-        res.send("success");
+        const result = await db.collection('products').find({ type: req.query.type }).project({ 'name': 1, 'price': 1, 'Images.i1': 1 }).toArray();
+        res.status(200).send(result);
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
-app.post('/login', async (req, res) => {
-    console.log(req.body);
+app.get('/product', async (req, res) => {
     try {
-        const result = await db.collection('login').find({ email: req.body.email }).toArray();
-        console.log(result);
-        if (result.length === 0) {
-            res.send("user not found")
+        const result = await db.collection('products').find({ _id: req.query.id }).toArray();
+        res.status(200).send(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.get('/cart', verifyToken, async (req, res) => {
+    try {
+        let cartIds = await db.collection('cart').find({ email: req.email }).project({ 'productIds': 1, '_id': 0 }).toArray();
+        if (cartIds.length === 0) {
+            return res.status(200).send([]);
         } else {
-            const isMatch = await bcrypt.compare(req.body.password, result[0].password);
-            if (!isMatch) {
-                return res.status(400).json({ msg: 'Invalid credentials' });
-            }
-            const payload = { email: result[0].email };
-            const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
-            res.json({ token });
+            cartIds = cartIds[0].productIds;
+            const result = await db.collection("products").find({
+                _id: { $in: cartIds }
+            }).project({ 'name': 1, 'price': 1, 'Images.i1': 1 }).toArray();
+            res.status(200).send(result);
         }
     } catch (error) {
         console.error(error);
@@ -82,14 +67,63 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.post('/sign_up', async (req, res) => {
+    try {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+        const result = await db.collection('login').insertOne(req.body);
+        const payload = { email: req.body.email }
+        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+        res.status(201).json({ token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.post('/login', async (req, res) => {
+    try {
+        const result = await db.collection('login').find({ email: req.body.email }).toArray();
+        if (result.length === 0) {
+            res.status(404).send("User not found");
+        } else {
+            const isMatch = await bcrypt.compare(req.body.password, result[0].password);
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Invalid credentials' });
+            }
+            const payload = { email: result[0].email };
+            const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+            res.status(200).json({ token });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.post('/addToCart', verifyToken, async (req, res) => {
+    try {
+        const result = await db.collection("cart").updateOne({ email: req.email }, { $addToSet: { productIds: req.body.id } }, { upsert: true });
+        res.status(201).send("Inserted successfully");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.delete("/removeCartItem", verifyToken, async (req,res)=>{
+    try {
+        const result = await db.collection("cart").updateOne({ email: req.email }, { $pull: { productIds: req.body.id } }, { upsert: true });
+        res.status(200).send("Removed successfully");
+    } catch (e) {
+        console.error(e);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
 // server listening on port
 app.listen(port, async () => {
     console.log(`successfully started server on port ${port}`);
     try {
         await client.connect();
         console.log('Connected to MongoDB Atlas');
-        const res = await db.collection('login').find().toArray();
-        console.log(res);
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
     }

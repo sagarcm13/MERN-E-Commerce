@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function ProductLeft(props) {
-  const [productData, setProductData] = useState(props.data);
+// eslint-disable-next-line react/prop-types
+export default function ProductLeft({data}) {
+  const [productData, setProductData] = useState(data);
   useEffect(() => {
-    setProductData(props.data);
-  }, [props.data])
+    setProductData(data);
+  }, [data])
   if (productData === undefined) {
     return <div>Loading...</div>;
   } else
     return (
-      <div className='w-[40%] float-left'>
+      <div className='md:w-[40%] md:float-left '>
         <div className="m-8">
           <img className='ml-8 w-[500px] h-auto' id='mainImg' src={productData[0].Images.i1} alt="" />
         </div>

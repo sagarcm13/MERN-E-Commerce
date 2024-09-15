@@ -25,7 +25,7 @@ export function useProductDetail(id) {
   });
 }
 
-export const getCartDetail = async (context) => {
+export const getCartDetail = async () => {
   return axiosClient.get('/cart',{headers: {'x-auth-token': localStorage.getItem("token")},}).then(res => res.data)
 }
 

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
-import ProductLeft from './product/ProductLeft';
-import ProductRight from './product/ProductRight';
-import { useProductDetail } from './api';
+import ProductLeft from './ProductLeft.jsx';
+import ProductRight from './ProductRight.jsx';
+import { useProductDetail } from '../../api.js';
 export default function Product() {
   const { state } = useLocation();
   const params = state;
@@ -15,7 +15,7 @@ export default function Product() {
     return <div>Loading...</div>;
   }
   return (
-    <div>
+    <div className='flex flex-col md:flex-row'>
       <ProductLeft data={productData} />
       <ProductRight data={productData} />
     </div>
