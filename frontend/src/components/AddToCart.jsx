@@ -42,7 +42,7 @@ export default function AddToCart({ id }) {
 
     return (
         <>
-            <button onClick={handleClick} className='bg-teal-500 m-4 text-xl font-bold text-white p-2 rounded-xl'>Add to cart</button>
+            <button onClick={handleClick} className='bg-teal-500 m-4 text-l md:text-xl font-bold text-white p-2 rounded-xl'>Add to cart</button>
             {isPopupOpen && (
                 <PopUp isOpen={isPopupOpen} onClose={handleClosePopup} onConfirm={handleConfirm} />
             )}

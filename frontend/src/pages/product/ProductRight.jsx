@@ -5,7 +5,10 @@ export default function ProductRight({data}) {
     const [productData, setProductData] = useState(data);
     useEffect(() => {
         setProductData(data);
-    }, [data])
+    }, [data]);
+    const payment=()=>{
+        
+    }
     if (productData === undefined) {
         return <div>Loading...</div>;
     } else {
@@ -23,7 +26,7 @@ export default function ProductRight({data}) {
                     </ul>
                     <div className="m-10 flex justify-center">
                         <AddToCart id={productData[0]._id}/>
-                        <button className='bg-yellow-400 m-4 text-xl font-bold text-white p-2 rounded-xl'> Buy now</button>
+                        <button onClick={payment} className='bg-yellow-400 m-4 text-xl font-bold text-white p-2 rounded-xl'> Buy now</button>
                     </div>
                 </div>
             </div>

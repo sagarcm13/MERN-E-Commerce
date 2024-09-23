@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 // eslint-disable-next-line react/prop-types
-export default function ProductLeft({data}) {
+export default function ProductLeft({ data }) {
   const [productData, setProductData] = useState(data);
   useEffect(() => {
     setProductData(data);
@@ -12,9 +12,9 @@ export default function ProductLeft({data}) {
     return (
       <div className='md:w-[40%] md:float-left '>
         <div className="m-8">
-          <img className='ml-8 w-[500px] h-auto' id='mainImg' src={productData[0].Images.i1} alt="" />
+          <img className='md:ml-8 md:w-[500px] w-screen h-auto' id='mainImg' src={productData[0].Images.i1} alt="" />
         </div>
-        <div className="flex m-5 space-x-16">
+        <div className="flex m-5 md:space-x-16">
           <div className="border-2 m-2 flex justify-center">
             <img className='w-[220px] h-auto mt-5 cursor-pointer' id='smallImg1' src={productData[0].Images.i1} onClick={() => {
               document.getElementById('mainImg').src = document.getElementById('smallImg1').src
